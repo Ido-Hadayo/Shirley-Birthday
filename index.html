@@ -336,7 +336,7 @@
         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
       </button>
       <button class="btn btn-play" id="playBtn" aria-label="נגן או עצור">
-        <svg id="playIcon" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        <svg viewBox="0 0 24 24"><path id="playIcon" fill="currentColor" d="M8 5v14l11-7z"/></svg>
       </button>
       <button class="btn btn-side" id="nextBtn" aria-label="הקטע הבא">
         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
@@ -412,15 +412,12 @@ const seek = document.getElementById("seek");
 const tCurrent = document.getElementById("tCurrent");
 const tTotal = document.getElementById("tTotal");
 const playBtn = document.getElementById("playBtn");
-const playIcon = document.getElementById("playIcon");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const listEl = document.getElementById("list");
 
 const ICON_MIC = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm7 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.07A7 7 0 0 0 19 12z"/></svg>';
 const ICON_NOTE = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v10.55A4 4 0 1 0 11 17V7h6V3z"/></svg>';
-const ICON_PLAY = '<path fill="currentColor" d="M8 5v14l11-7z"/>';
-const ICON_PAUSE = '<path fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
 
 let current = 0;
 let isSeeking = false;
@@ -490,8 +487,8 @@ playBtn.addEventListener("click", () => {
 prevBtn.addEventListener("click", () => loadTrack(current - 1, true));
 nextBtn.addEventListener("click", () => loadTrack(current + 1, true));
 
-audio.addEventListener("play", () => { playIcon.outerHTML = `<path id="playIcon" fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z"/>`; document.body.classList.add("playing"); });
-audio.addEventListener("pause", () => { const el = document.getElementById("playIcon"); if(el) el.outerHTML = `<path id="playIcon" fill="currentColor" d="M8 5v14l11-7z"/>`; document.body.classList.remove("playing"); });
+audio.addEventListener("play", () => { document.getElementById("playIcon").setAttribute("d", "M6 5h4v14H6zm8 0h4v14h-4z"); document.body.classList.add("playing"); });
+audio.addEventListener("pause", () => { document.getElementById("playIcon").setAttribute("d", "M8 5v14l11-7z"); document.body.classList.remove("playing"); });
 
 audio.addEventListener("loadedmetadata", () => {
   seek.max = audio.duration || 0;
