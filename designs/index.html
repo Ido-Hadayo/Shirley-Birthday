@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אפשרויות עיצוב — מיקסטייפ לשירלי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15121C;
+    --card:#1F1B29;
+    --ink:#F2EFF9;
+    --ink-muted:#9C93B5;
+    --line:rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Rubik","Segoe UI",Arial,sans-serif;
+    min-height:100vh;
+    display:flex; justify-content:center;
+    padding:36px 16px 64px;
+  }
+  .page{ width:100%; max-width:520px; direction:rtl; }
+  .eyebrow{ text-align:center; color:var(--ink-muted); font-size:.85rem; margin:0 0 8px; }
+  h1{ text-align:center; font-size:1.7rem; margin:0 0 8px; text-wrap:balance; }
+  p.lead{ text-align:center; color:var(--ink-muted); font-size:.92rem; margin:0 0 32px; line-height:1.6; }
+
+  .options{ display:flex; flex-direction:column; gap:16px; }
+  a.option{
+    display:block;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:20px;
+    text-decoration:none;
+    color:inherit;
+  }
+  .opt-top{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .swatches{ display:flex; gap:4px; }
+  .swatch{ width:16px; height:16px; border-radius:4px; }
+  .opt-name{ font-weight:700; font-size:1.08rem; }
+  .opt-desc{ color:var(--ink-muted); font-size:.86rem; line-height:1.6; margin:0; }
+  .opt-tags{ margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+  .tag{ font-size:.72rem; color:var(--ink-muted); border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
+
+  footer{ text-align:center; color:var(--ink-muted); font-size:.82rem; margin-top:34px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="eyebrow">4 כיוונים לבחירה</p>
+  <h1>איזה עיצוב הכי מתאים?</h1>
+  <p class="lead">כולם עובדים בפועל עם השירים האמיתיים — אפשר להיכנס, לנגן, ולראות את הרשימה. אחרי שתבחרי כיוון, ממשיכים לעצב ולשפר משם — לא חייבים להתקבע.</p>
+
+  <div class="options">
+    <a class="option" href="../index.html">
+      <div class="opt-top">
+        <div class="swatches">
+          <span class="swatch" style="background:#17111f"></span>
+          <span class="swatch" style="background:#e7a53c"></span>
+          <span class="swatch" style="background:#e2637f"></span>
+          <span class="swatch" style="background:#4fb3ab"></span>
+        </div>
+        <span class="opt-name">א׳ · מיקסטייפ</span>
+      </div>
+      <p class="opt-desc">קלטת רטרו בלילה — סליליים מסתובבים, תווית קלטת, תאורה חמה על רקע כהה. הגרסה החיה הנוכחית.</p>
+      <div class="opt-tags"><span class="tag">כהה</span><span class="tag">נוסטלגי</span><span class="tag">רשימה אנכית</span></div>
+    </a>
+
+    <a class="option" href="./scrapbook.html">
+      <div class="opt-top">
+        <div class="swatches">
+          <span class="swatch" style="background:#fbf2e3"></span>
+          <span class="swatch" style="background:#e2738c"></span>
+          <span class="swatch" style="background:#6fb6a0"></span>
+          <span class="swatch" style="background:#d98c2b"></span>
+        </div>
+        <span class="opt-name">ב׳ · אלבום תמונות</span>
+      </div>
+      <p class="opt-desc">דף מדבקות בהיר וחם — כל שיר הוא תמונת פולארויד מוטה קלות עם נייר דבק, כמו אלבום פיזי.</p>
+      <div class="opt-tags"><span class="tag">בהיר</span><span class="tag">ידני-חמים</span><span class="tag">רשת פולארויד</span></div>
+    </a>
+
+    <a class="option" href="./vinyl.html">
+      <div class="opt-top">
+        <div class="swatches">
+          <span class="swatch" style="background:#0b0b14"></span>
+          <span class="swatch" style="background:#ff3d8a"></span>
+          <span class="swatch" style="background:#33f0d6"></span>
+          <span class="swatch" style="background:#9b5cff"></span>
+        </div>
+        <span class="opt-name">ג׳ · תקליט לילה</span>
+      </div>
+      <p class="opt-desc">תקליט מסתובב עם זוהר ניאון, גלילה אופקית של כל ההקדשות למעלה — אנרגיה של מסיבה.</p>
+      <div class="opt-tags"><span class="tag">כהה</span><span class="tag">ניאון</span><span class="tag">גלילה אופקית</span></div>
+    </a>
+
+    <a class="option" href="./confetti.html">
+      <div class="opt-top">
+        <div class="swatches">
+          <span class="swatch" style="background:#fff7fb"></span>
+          <span class="swatch" style="background:#8b5cf6"></span>
+          <span class="swatch" style="background:#ffc93c"></span>
+          <span class="swatch" style="background:#2ec4b6"></span>
+        </div>
+        <span class="opt-name">ד׳ · כרטיס קונפטי</span>
+      </div>
+      <p class="opt-desc">כמו כרטיס ברכה דיגיטלי — תג עגול גדול במרכז, וכל ההקדשות כ"מדבקות" צבעוניות למטה.</p>
+      <div class="opt-tags"><span class="tag">בהיר</span><span class="tag">חגיגי</span><span class="tag">שבבים צבעוניים</span></div>
+    </a>
+  </div>
+
+  <footer>כל האופציות מציגות את אותם 17 הקדשות ואת אותם שירים אמיתיים —<br>רק העיצוב, האייקונים והלייאאוט שונים בין אחת לשנייה.</footer>
+</div>
+</body>
+</html>
