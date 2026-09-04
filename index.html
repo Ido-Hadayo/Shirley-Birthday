@@ -260,6 +260,19 @@
     flex-shrink:0;
     padding-top:1px;
   }
+  .pair-thumb{
+    width:38px;
+    height:38px;
+    border-radius:8px;
+    flex-shrink:0;
+    overflow:hidden;
+    background:linear-gradient(160deg,var(--rose),var(--teal));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .pair-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .pair-thumb svg{ width:18px; height:18px; fill:var(--ink); opacity:0.85; }
   .pair-info{
     min-width:0;
     flex:1;
@@ -439,6 +452,7 @@ function renderList(){
     row.className = "pair-row" + (isActive ? " active" : "");
     row.innerHTML = `
       <span class="pair-num">${String(i+1).padStart(2,"0")}</span>
+      <span class="pair-thumb">${p.song.cover ? `<img src="${p.song.cover}" alt="">` : ICON_NOTE}</span>
       <span class="pair-info">
         <span class="pair-from">🎙️ הקדשה מאת <b>${p.from}</b></span>
         <span class="pair-song">🎵 ${p.song.title || "השיר טרם נבחר"}</span>
