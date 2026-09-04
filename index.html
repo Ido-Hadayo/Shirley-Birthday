@@ -20,6 +20,14 @@
     --teal:#4fb3ab;
     --line:rgba(243,234,217,0.14);
   }
+  /* אנלוגי (סגול-כחול-מגנטה, הפרשי גוון ~30°-60°) */
+  :root[data-palette="analogous"]{
+    --amber:#6C7BFF; --amber-dim:#3D4590; --rose:#9B6BFF; --teal:#C56BFF;
+  }
+  /* משלים עדין (טורקיז מול טרה-קוטה, רווי נמוך) */
+  :root[data-palette="complementary"]{
+    --amber:#4FA8A6; --amber-dim:#2C6361; --rose:#C97B52; --teal:#D9B26A;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -53,10 +61,20 @@
     font-weight:900;
     font-size:2rem;
     text-align:center;
-    margin:0 0 28px;
+    margin:0 0 16px;
     text-wrap:balance;
     line-height:1.25;
   }
+
+  .palette-row{ display:flex; gap:8px; justify-content:center; margin:0 0 24px; flex-wrap:wrap; }
+  .palette-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--bg-well); border:1px solid var(--line); border-radius:999px;
+    padding:6px 12px; cursor:pointer; font-family:"Rubik",sans-serif; font-size:.74rem; color:var(--ink-muted);
+  }
+  .palette-btn.active{ border-color:var(--amber); color:var(--ink); }
+  .palette-dots{ display:flex; gap:2px; }
+  .palette-dots span{ width:9px; height:9px; border-radius:50%; }
 
   .deck{
     background:var(--bg-raised);
@@ -320,6 +338,8 @@
   <p class="eyebrow">מיקסטייפ מוקלט ביד</p>
   <h1>יום הולדת שמח, שירלי!</h1>
 
+  <div class="palette-row" id="paletteRow"></div>
+
   <div class="deck">
     <div class="cassette">
       <div class="reels">
@@ -381,6 +401,32 @@
   song.title / song.file / song.cover: פרטי השיר שמוקדש בעקבותיה
     (song.file בתוך audio/, song.cover בתוך covers/)
 */
+const PALETTES = [
+  { id: "default", label: "מקורי", dots: ["#e7a53c","#e2637f","#4fb3ab"] },
+  { id: "analogous", label: "אנלוגי", dots: ["#6C7BFF","#9B6BFF","#C56BFF"] },
+  { id: "complementary", label: "משלים עדין", dots: ["#4FA8A6","#C97B52","#D9B26A"] },
+];
+function applyPalette(id){
+  document.documentElement.setAttribute("data-palette", id === "default" ? "" : id);
+  try{ localStorage.setItem("palette-mixtape", id); }catch(e){}
+  document.querySelectorAll(".palette-btn").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+}
+function renderPaletteRow(){
+  const row = document.getElementById("paletteRow");
+  let saved = "default";
+  try{ saved = localStorage.getItem("palette-mixtape") || "default"; }catch(e){}
+  PALETTES.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn" + (p.id === saved ? " active" : "");
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="palette-dots">${p.dots.map(c=>`<span style="background:${c}"></span>`).join("")}</span>${p.label}`;
+    btn.addEventListener("click", () => applyPalette(p.id));
+    row.appendChild(btn);
+  });
+  applyPalette(saved);
+}
+renderPaletteRow();
+
 const RAW_BASE = "https://raw.githubusercontent.com/Ido-Hadayo/Shirley-Birthday/main/";
 const audioUrl = f => f ? RAW_BASE + "audio/" + f : "";
 const coverUrl = f => f ? RAW_BASE + "covers/" + f : "";

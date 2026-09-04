@@ -19,6 +19,14 @@
     --pink:#FF6FA5;
     --line:#F0E7FA;
   }
+  /* פסטל אחיד (אותה טטרדה, רוויה ובהירות עדינות יותר) */
+  :root[data-palette="pastel"]{
+    --purple:#B9A6F0; --yellow:#FFE29A; --teal:#9FE0D3; --pink:#FFB8CE;
+  }
+  /* דו-גוני חגיגי (סגול מול זהב בלבד, פחות תחרות צבעים) */
+  :root[data-palette="duotone"]{
+    --purple:#7C6FEF; --yellow:#E8B84B; --teal:#7C6FEF; --pink:#E8B84B;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -36,7 +44,18 @@
   .page{ width:100%; max-width:440px; direction:rtl; position:relative; z-index:1; }
 
   h1{ font-family:"Varela Round",sans-serif; font-size:1.9rem; text-align:center; margin:0 0 4px; text-wrap:balance; color:var(--purple); }
-  .sub{ text-align:center; color:var(--ink-muted); font-size:.9rem; margin:0 0 26px; }
+  .sub{ text-align:center; color:var(--ink-muted); font-size:.9rem; margin:0 0 18px; }
+
+  .palette-row{ display:flex; gap:8px; justify-content:center; margin:0 0 24px; flex-wrap:wrap; }
+  .palette-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:6px 12px; cursor:pointer; font-family:"Heebo",sans-serif; font-size:.74rem; color:var(--ink-muted);
+    box-shadow:0 4px 10px -6px rgba(43,33,64,.2);
+  }
+  .palette-btn.active{ border-color:var(--purple); color:var(--ink); }
+  .palette-dots{ display:flex; gap:2px; }
+  .palette-dots span{ width:9px; height:9px; border-radius:50%; }
 
   .badge-wrap{ display:flex; justify-content:center; margin-bottom:14px; }
   .badge{
@@ -93,6 +112,8 @@
   <h1>יום הולדת שמח, שירלי! 🎉</h1>
   <p class="sub">כרטיס ברכה עם 17 הקדשות</p>
 
+  <div class="palette-row" id="paletteRow"></div>
+
   <div class="badge-wrap">
     <div class="badge" id="art"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm7 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.07A7 7 0 0 0 19 12z"/></svg></div>
   </div>
@@ -121,6 +142,32 @@
 <audio id="audio"></audio>
 
 <script>
+const PALETTES = [
+  { id: "default", label: "מקורי", dots: ["#8B5CF6","#FFC93C","#2EC4B6","#FF6FA5"] },
+  { id: "pastel", label: "פסטל אחיד", dots: ["#B9A6F0","#FFE29A","#9FE0D3","#FFB8CE"] },
+  { id: "duotone", label: "דו-גוני חגיגי", dots: ["#7C6FEF","#E8B84B"] },
+];
+function applyPalette(id){
+  document.documentElement.setAttribute("data-palette", id === "default" ? "" : id);
+  try{ localStorage.setItem("palette-confetti", id); }catch(e){}
+  document.querySelectorAll(".palette-btn").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+}
+function renderPaletteRow(){
+  const row = document.getElementById("paletteRow");
+  let saved = "default";
+  try{ saved = localStorage.getItem("palette-confetti") || "default"; }catch(e){}
+  PALETTES.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn" + (p.id === saved ? " active" : "");
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="palette-dots">${p.dots.map(c=>`<span style="background:${c}"></span>`).join("")}</span>${p.label}`;
+    btn.addEventListener("click", () => applyPalette(p.id));
+    row.appendChild(btn);
+  });
+  applyPalette(saved);
+}
+renderPaletteRow();
+
 const RAW_BASE = "https://raw.githubusercontent.com/Ido-Hadayo/Shirley-Birthday/main/";
 const audioUrl = f => f ? RAW_BASE + "audio/" + f : "";
 const coverUrl = f => f ? RAW_BASE + "covers/" + f : "";

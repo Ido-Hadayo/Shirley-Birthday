@@ -18,6 +18,14 @@
     --mustard:#D98C2B;
     --line:#E9DAC2;
   }
+  /* פסטל אנלוגי (משפחת אדום-כתום-חול, הפרשי גוון קטנים) */
+  :root[data-palette="analogous"]{
+    --pink:#E8A7A0; --mint:#EFC7A0; --mustard:#D9C39A;
+  }
+  /* מונוכרום שלווה (ירוק-מרווה בגוני עומק, נגיעת ורוד עמום כמשלים) */
+  :root[data-palette="monochrome"]{
+    --pink:#6E8F6B; --mint:#A8C7A0; --mustard:#D98C93;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -50,7 +58,17 @@
     margin:0 0 4px;
     text-wrap:balance;
   }
-  .sub{ text-align:center; color:var(--ink-muted); font-size:.9rem; margin:0 0 24px; }
+  .sub{ text-align:center; color:var(--ink-muted); font-size:.9rem; margin:0 0 18px; }
+
+  .palette-row{ display:flex; gap:8px; justify-content:center; margin:0 0 22px; flex-wrap:wrap; }
+  .palette-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:6px 12px; cursor:pointer; font-family:"Assistant",sans-serif; font-size:.74rem; color:var(--ink-muted);
+  }
+  .palette-btn.active{ border-color:var(--mustard); color:var(--ink); }
+  .palette-dots{ display:flex; gap:2px; }
+  .palette-dots span{ width:9px; height:9px; border-radius:50%; }
 
   .polaroid-now{
     background:var(--card);
@@ -133,6 +151,8 @@
   <h1>יום הולדת שמח, שירלי!</h1>
   <p class="sub">אלבום ההקדשות שלך</p>
 
+  <div class="palette-row" id="paletteRow"></div>
+
   <div class="polaroid-now">
     <div class="now-art" id="art"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm7 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.07A7 7 0 0 0 19 12z"/></svg></div>
     <p class="now-kind" id="kind">הקלטה</p>
@@ -161,6 +181,32 @@
 <audio id="audio"></audio>
 
 <script>
+const PALETTES = [
+  { id: "default", label: "מקורי", dots: ["#E2738C","#6FB6A0","#D98C2B"] },
+  { id: "analogous", label: "פסטל אנלוגי", dots: ["#E8A7A0","#EFC7A0","#D9C39A"] },
+  { id: "monochrome", label: "מונוכרום שלווה", dots: ["#6E8F6B","#A8C7A0","#D98C93"] },
+];
+function applyPalette(id){
+  document.documentElement.setAttribute("data-palette", id === "default" ? "" : id);
+  try{ localStorage.setItem("palette-scrapbook", id); }catch(e){}
+  document.querySelectorAll(".palette-btn").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+}
+function renderPaletteRow(){
+  const row = document.getElementById("paletteRow");
+  let saved = "default";
+  try{ saved = localStorage.getItem("palette-scrapbook") || "default"; }catch(e){}
+  PALETTES.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn" + (p.id === saved ? " active" : "");
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="palette-dots">${p.dots.map(c=>`<span style="background:${c}"></span>`).join("")}</span>${p.label}`;
+    btn.addEventListener("click", () => applyPalette(p.id));
+    row.appendChild(btn);
+  });
+  applyPalette(saved);
+}
+renderPaletteRow();
+
 const RAW_BASE = "https://raw.githubusercontent.com/Ido-Hadayo/Shirley-Birthday/main/";
 const audioUrl = f => f ? RAW_BASE + "audio/" + f : "";
 const coverUrl = f => f ? RAW_BASE + "covers/" + f : "";

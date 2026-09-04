@@ -18,6 +18,14 @@
     --cyan:#33F0D6;
     --purple:#9B5CFF;
   }
+  /* טריאדי עמוק (אותה מבנה זוויות, גוונים עשירים פחות זוהרים) */
+  :root[data-palette="triadic"]{
+    --pink:#D6398F; --cyan:#2FBF8F; --purple:#5B5FEF;
+  }
+  /* מונוכרום כחול-סגול (גוון אחד, גוני בהירות שונים) */
+  :root[data-palette="monochrome"]{
+    --pink:#6B7FF5; --cyan:#A6B0FF; --purple:#33409E;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -36,6 +44,16 @@
   .eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); text-align:center; margin:0 0 6px; }
   h1{ font-family:"Secular One",sans-serif; font-size:1.9rem; text-align:center; margin:0 0 24px; text-wrap:balance;
       background:linear-gradient(90deg,var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .palette-row{ display:flex; gap:8px; justify-content:center; margin:0 0 20px; flex-wrap:wrap; }
+  .palette-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:6px 12px; cursor:pointer; font-family:"Heebo",sans-serif; font-size:.74rem; color:var(--ink-muted);
+  }
+  .palette-btn.active{ border-color:var(--cyan); color:var(--ink); }
+  .palette-dots{ display:flex; gap:2px; }
+  .palette-dots span{ width:9px; height:9px; border-radius:50%; }
 
   .scroller{ display:flex; gap:12px; overflow-x:auto; padding:4px 4px 16px; margin-bottom:8px; }
   .scroller::-webkit-scrollbar{ display:none; }
@@ -103,6 +121,8 @@
   <p class="eyebrow">NIGHT MIX · שירלי</p>
   <h1>יום הולדת שמח!</h1>
 
+  <div class="palette-row" id="paletteRow"></div>
+
   <div class="scroller" id="scroller"></div>
 
   <div class="deck">
@@ -132,6 +152,32 @@
 <audio id="audio"></audio>
 
 <script>
+const PALETTES = [
+  { id: "default", label: "מקורי", dots: ["#FF3D8A","#33F0D6","#9B5CFF"] },
+  { id: "triadic", label: "טריאדי עמוק", dots: ["#D6398F","#2FBF8F","#5B5FEF"] },
+  { id: "monochrome", label: "מונוכרום כחול", dots: ["#6B7FF5","#A6B0FF","#33409E"] },
+];
+function applyPalette(id){
+  document.documentElement.setAttribute("data-palette", id === "default" ? "" : id);
+  try{ localStorage.setItem("palette-vinyl", id); }catch(e){}
+  document.querySelectorAll(".palette-btn").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+}
+function renderPaletteRow(){
+  const row = document.getElementById("paletteRow");
+  let saved = "default";
+  try{ saved = localStorage.getItem("palette-vinyl") || "default"; }catch(e){}
+  PALETTES.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn" + (p.id === saved ? " active" : "");
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="palette-dots">${p.dots.map(c=>`<span style="background:${c}"></span>`).join("")}</span>${p.label}`;
+    btn.addEventListener("click", () => applyPalette(p.id));
+    row.appendChild(btn);
+  });
+  applyPalette(saved);
+}
+renderPaletteRow();
+
 const RAW_BASE = "https://raw.githubusercontent.com/Ido-Hadayo/Shirley-Birthday/main/";
 const audioUrl = f => f ? RAW_BASE + "audio/" + f : "";
 const coverUrl = f => f ? RAW_BASE + "covers/" + f : "";
