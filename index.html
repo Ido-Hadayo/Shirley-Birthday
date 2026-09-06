@@ -269,9 +269,62 @@
     text-align:center;
     width:100%;
   }
+
+  .welcome-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(42,33,24,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:100;
+  }
+  .welcome-overlay.closed{ display:none; }
+  .welcome-card{
+    background:var(--bg-raised);
+    border-radius:20px;
+    padding:30px 26px;
+    max-width:380px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 24px 48px -20px rgba(0,0,0,0.5);
+  }
+  .welcome-text{
+    white-space:pre-line;
+    line-height:1.7;
+    font-size:1.05rem;
+    margin:0 0 22px;
+  }
+  .welcome-btn{
+    background:var(--amber);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:14px 36px;
+    font-family:inherit;
+    font-size:1.1rem;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .welcome-btn:focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
 </style>
 </head>
 <body>
+
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-card">
+    <p class="welcome-text">יום הולדת שמח!
+אני אומנם מרחוק אבל שימי אוזניות (סתם)
+תשמעי את הקול שלי כאילו אני פה
+ברוכה הבאה לרדיו יום ההולדת שלך!
+תשמעי עוד בהקדמה 🩷
+אני אוהבת אותך!!!!
+תלחצי התחללללל
+בוא נחגוגגגג</p>
+    <button class="welcome-btn" id="welcomeBtn">התחל</button>
+  </div>
+</div>
 
 <div class="page" dir="rtl">
   <p class="eyebrow">מיקסטייפ מוקלט ביד</p>
@@ -335,13 +388,13 @@ const rec = (from, note, file, cover) => ({ kind: "recording", from, note: note 
 const song = (title, file, cover) => ({ kind: "song", title, file: file || "", cover: cover || "" });
 
 const ITEMS_RAW = [
-  rec(null, "פתיחה — חלק 1", "rec-opening-1.m4a"),
-  rec(null, "פתיחה — חלק 2", "rec-opening-2.m4a"),
-  song("Puzzle Pieces — Saint Motel", "puzzle-pieces.mp3"),
+  rec(null, "פתיחה — חלק 1", "rec-opening-1.m4a", "cover-opening-1.jpg"),
+  rec(null, "פתיחה — חלק 2", "rec-opening-2.m4a", "cover-opening-2.jpg"),
+  song("Puzzle Pieces — Saint Motel", "puzzle-pieces.mp3", "cover-puzzle-pieces.jpg"),
   rec("סימונה", "לקראת Good Morning Baltimore", "rec-simona-1.m4a", "cover-simona-1.jpg"),
   song("Good Morning Baltimore — Hairspray (Nikki Blonsky)", "good-morning-baltimore.mp3"),
   rec(null, "הקדמה לפני \"שנקין\"", "rec-intro-sheinkin.m4a"),
-  song("שנקין — מנגו", "sheinkin.mp3"),
+  song("שנקין — מנגו", "sheinkin.mp3", "cover-sheinkin.jpg"),
   rec("עמית", "לקראת מנשה", "rec-amit-menashe.m4a", "cover-amit-1.jpg"),
   song("מנשה — מתוך \"החבדניקים\"", "menashe.mp3"),
   rec("מעיין", "", "rec-meayan.m4a", "cover-meayan.jpg"),
@@ -537,6 +590,10 @@ audio.addEventListener("error", () => {
 });
 
 loadTrack(0, false);
+
+document.getElementById("welcomeBtn").addEventListener("click", () => {
+  document.getElementById("welcomeOverlay").classList.add("closed");
+});
 </script>
 </body>
 </html>

@@ -52,13 +52,13 @@ const rec = (from, note, file, cover) => ({ kind: "recording", from, note: note 
 const song = (title, file, cover) => ({ kind: "song", title, file: file || "", cover: cover || "" });
 
 const ITEMS_RAW = [
-  rec(null, "פתיחה — חלק 1", "rec-opening-1.m4a"),
-  rec(null, "פתיחה — חלק 2", "rec-opening-2.m4a"),
-  song("Puzzle Pieces — Saint Motel", "puzzle-pieces.mp3"),
+  rec(null, "פתיחה — חלק 1", "rec-opening-1.m4a", "cover-opening-1.jpg"),
+  rec(null, "פתיחה — חלק 2", "rec-opening-2.m4a", "cover-opening-2.jpg"),
+  song("Puzzle Pieces — Saint Motel", "puzzle-pieces.mp3", "cover-puzzle-pieces.jpg"),
   rec("סימונה", "לקראת Good Morning Baltimore", "rec-simona-1.m4a", "cover-simona-1.jpg"),
   song("Good Morning Baltimore — Hairspray (Nikki Blonsky)", "good-morning-baltimore.mp3"),
   rec(null, "הקדמה לפני \"שנקין\"", "rec-intro-sheinkin.m4a"),
-  song("שנקין — מנגו", "sheinkin.mp3"),
+  song("שנקין — מנגו", "sheinkin.mp3", "cover-sheinkin.jpg"),
   rec("עמית", "לקראת מנשה", "rec-amit-menashe.m4a", "cover-amit-1.jpg"),
   song("מנשה — מתוך \"החבדניקים\"", "menashe.mp3"),
   rec("מעיין", "", "rec-meayan.m4a", "cover-meayan.jpg"),
