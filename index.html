@@ -385,8 +385,6 @@
   </div>
 
   <span class="example-flag" id="exampleFlag" hidden>הקבצים כאן הם עדיין דוגמה — יוחלפו בהקלטות ובשירים האמיתיים</span>
-
-  <a href="./designs/index.html" style="display:block;text-align:center;margin-top:22px;color:var(--ink-muted);font-size:.82rem;">רוצה לראות עיצובים אחרים? ←</a>
 </div>
 
 <audio id="audio"></audio>
@@ -395,11 +393,11 @@
 /*
   הקבצים עצמם יושבים ברפו נפרד (Ido-Hadayo/Shirley-Birthday), בתיקיות
   audio/ ו-covers/, ונטענים כאן דרך raw.githubusercontent.com.
-  כל איבר הוא זוג "הקלטה + שיר מוקדש", לפי סדר ההשמעה.
-  from:  שם מי שהקליט את ההקדשה
-  recording: שם קובץ ה-mp3 של ההקלטה בתוך audio/ (ריק = עדיין לא הועלה)
-  song.title / song.file / song.cover: פרטי השיר שמוקדש בעקבותיה
-    (song.file בתוך audio/, song.cover בתוך covers/)
+  הרשימה היא סדר ההשמעה המלא והמדויק ששלחה מעיין (68 שורות = 68 קבצים),
+  בלי קיבוץ לזוגות — יש אנשים עם כמה תורות (למשל עמית, סימונה), ויש
+  הקלטות בלי שם מיוחס עדיין (from: null, מסומנות בהערה למה).
+  kind: "recording" (from: שם או null) או "song" (title/file/cover).
+  file/cover הם שמות קבצים בתוך audio/ ו-covers/ בהתאמה (ריק = חסר).
 */
 const PALETTES = [
   { id: "default", label: "מקורי", dots: ["#e7a53c","#e2637f","#4fb3ab"] },
@@ -431,38 +429,87 @@ const RAW_BASE = "https://raw.githubusercontent.com/Ido-Hadayo/Shirley-Birthday/
 const audioUrl = f => f ? RAW_BASE + "audio/" + f : "";
 const coverUrl = f => f ? RAW_BASE + "covers/" + f : "";
 
-const PAIRS_RAW = [
-  { from: "סימונה", recording: "", song: { title: "Forever Young — Alphaville", file: "01-forever-young.mp3", cover: "" } },
-  { from: "משה", recording: "", song: { title: "", file: "", cover: "" } },
-  { from: "מעיין", recording: "", song: { title: "", file: "", cover: "" } },
-  { from: "עמית", recording: "", song: { title: "טיפת אמת — רביד פלוטניק", file: "02-tipat-emet.mp3", cover: "" } },
-  { from: "נוי", recording: "", song: { title: "שיר לנטע — ניר כנען", file: "03-shir-lenatta.mp3", cover: "" } },
-  { from: "אמית", recording: "", song: { title: "איך לאכול אותך?", file: "04-eich-leechol-otach.mp3", cover: "" } },
-  { from: "יובל", recording: "", song: { title: "It Starts With Sorry", file: "05-it-starts-with-sorry.mp3", cover: "" } },
-  { from: "דרור", recording: "", song: { title: "עבד כי ימלוך", file: "06-eved-ki-yimloch.mp3", cover: "" } },
-  { from: "מוניס", recording: "", song: { title: "עבריין — ליילי", file: "07-avaryan.mp3", cover: "" } },
-  { from: "גבי", recording: "", song: { title: "", file: "", cover: "" } },
-  { from: "יויו", recording: "", song: { title: "משהו שהוא שלך", file: "", cover: "" } },
-  { from: "אבא שלה", recording: "", song: { title: "", file: "", cover: "" } },
-  { from: "דניאל", recording: "", song: { title: "וודו — מרסדס בנד", file: "08-vudu.mp3", cover: "" } },
-  { from: "לי ים", recording: "", song: { title: "Don't Stop Me Now — Queen", file: "09-dont-stop-me-now.mp3", cover: "" } },
-  { from: "נווה", recording: "", song: { title: "", file: "", cover: "" } },
-  { from: "גל", recording: "", song: { title: "לונדון", file: "", cover: "" } },
-  { from: "רז", recording: "", song: { title: "", file: "", cover: "" } },
+const rec = (from, note) => ({ kind: "recording", from, note: note || "", file: "" });
+const song = (title, file, cover) => ({ kind: "song", title, file: file || "", cover: cover || "" });
+
+const ITEMS_RAW = [
+  rec(null, "פתיחה — חלק 1 (יש גם חלק 2)"),
+  song("Puzzle Pieces"),
+  rec(null, "שורה נפרדת ברשימה של מעיין — אולי כפולה עם הבאה?"),
+  rec("סימונה"),
+  song("Good Morning Baltimore"),
+  rec(null, "הקדמה לפני \"שנקין\""),
+  song("שנקין"),
+  rec("עמית"),
+  song("מנשה (חבדניקים)"),
+  rec("מעיין"),
+  song("I'll Be There for You"),
+  rec(null, "\"אני: הקלטה מהעבודה, בהיסטוריה\" — של מי זה?"),
+  rec(null, "הקדמה לפני \"מביאים את זה לאללה\""),
+  song("מביאים את זה לאללה"),
+  song("Dog Days Are Over"),
+  rec("לי ים", "חלק 1"),
+  rec("לי ים", "חלק 2"),
+  song("Don't Stop Me Now — Queen", "dont-stop-me-now.mp3"),
+  rec("דניאל"),
+  song("וודו — מרסדס בנד", "vudu.mp3"),
+  song("כל השבוע לך"),
+  song("לזוז"),
+  rec("משה"),
+  song("Defying Gravity"),
+  rec("יויו"),
+  song("Liang", "liang.mp3"),
+  rec("אבא של שירלי"),
+  song("Barbie Girl", "barbie-girl.mp3"),
+  rec("עמית", "לקראת טיפת אמת"),
+  song("טיפת אמת", "tipat-emet.mp3"),
+  rec(null, "הקדמה לפני Top of the World"),
+  song("Top of the World"),
+  rec("דרור"),
+  song("עבד כי ימלוך", "eved-ki-yimloch.mp3"),
+  rec("תמר"),
+  song("Hopelessly Devoted to You"),
+  rec("גבי"),
+  song("חביב גלבי", "habib-galbi.mp3"),
+  rec("נוי"),
+  song("False Confidence"),
+  rec("קרן", "חלק 1"),
+  rec("קרן", "חלק 2"),
+  song("Isn't She Lovely — Glee", "isnt-she-lovely.mp3"),
+  rec("מוניס"),
+  song("עבריין — ליילי", "avaryan.mp3"),
+  rec(null, "הקדמה לפני Man or a Muppet"),
+  song("Man or a Muppet"),
+  rec("יובל"),
+  song("It Starts With Sorry", "it-starts-with-sorry.mp3"),
+  rec("צור", "חלק 1"),
+  rec("צור", "חלק 2"),
+  song("Country Roads"),
+  rec("נעמה"),
+  rec("עמית", "לקראת שיר לנטע"),
+  song("שיר לנטע", "shir-lenatta.mp3"),
+  rec("סימונה", "ברכה 2, לקראת Forever Young"),
+  song("Forever Young — Alphaville", "forever-young.mp3"),
+  rec("סימונה", "ברכה אחרונה"),
+  song("In My Life"),
+  song("Best Friend"),
+  rec(null, "הקדמה ל-Avenue Q — חלק 1"),
+  rec(null, "הקדמה ל-Avenue Q — חלק 2"),
+  song("בי איי אין אינגליש (שם לא ודאי)"),
+  rec("עמית", "לקראת איך לאכול אותך"),
+  song("איך לאכול אותך", "eich-leechol-otach.mp3"),
+  rec(null, "הקדמה לפני City of Stars"),
+  rec(null, "ברכת סיום"),
+  song("City of Stars"),
 ];
 
-const PAIRS = PAIRS_RAW.map(p => ({
-  from: p.from,
-  recording: audioUrl(p.recording),
-  song: { title: p.song.title, src: audioUrl(p.song.file), cover: coverUrl(p.song.cover) }
-}));
+const ITEMS = ITEMS_RAW.map(it => it.kind === "recording"
+  ? { ...it, src: audioUrl(it.file) }
+  : { ...it, src: audioUrl(it.file), cover: coverUrl(it.cover) }
+);
+const PLAYLIST = ITEMS;
 
-const PLAYLIST = PAIRS.flatMap((p, pi) => [
-  { type: "recording", src: p.recording, from: p.from, pairIndex: pi },
-  { type: "song", src: p.song.src, title: p.song.title, cover: p.song.cover, from: p.from, pairIndex: pi }
-]);
-
-const hasRealFiles = PAIRS.some(p => p.recording || p.song.src);
+const hasRealFiles = ITEMS.some(it => it.src);
 document.getElementById("exampleFlag").hidden = hasRealFiles;
 
 const audio = document.getElementById("audio");
@@ -494,20 +541,27 @@ function fmt(sec){
 
 function renderList(){
   listEl.innerHTML = "";
-  PAIRS.forEach((p, i) => {
+  ITEMS.forEach((it, i) => {
     const row = document.createElement("button");
-    const isActive = PLAYLIST[current].pairIndex === i;
-    row.className = "pair-row" + (isActive ? " active" : "");
+    row.className = "pair-row" + (i === current ? " active" : "");
+    const thumb = it.kind === "song" && it.cover ? `<img src="${it.cover}" alt="">` : (it.kind === "song" ? ICON_NOTE : ICON_MIC);
+    const label = it.kind === "recording"
+      ? `<span class="pair-from">🎙️ ${it.from ? `הקדשה מאת <b>${it.from}</b>` : "הקדמה"}${it.note ? ` <span style="opacity:.6">· ${it.note}</span>` : ""}</span>`
+      : `<span class="pair-song">🎵 ${it.title || "טרם נקבע"}</span>`;
     row.innerHTML = `
       <span class="pair-num">${String(i+1).padStart(2,"0")}</span>
-      <span class="pair-thumb">${p.song.cover ? `<img src="${p.song.cover}" alt="">` : ICON_NOTE}</span>
-      <span class="pair-info">
-        <span class="pair-from">🎙️ הקדשה מאת <b>${p.from}</b></span>
-        <span class="pair-song">🎵 ${p.song.title || "השיר טרם נבחר"}</span>
-      </span>`;
-    row.addEventListener("click", () => loadTrack(i*2, true));
+      <span class="pair-thumb">${thumb}</span>
+      <span class="pair-info">${label}</span>`;
+    row.addEventListener("click", () => loadTrack(i, true));
     listEl.appendChild(row);
   });
+}
+
+function nearestFrom(i){
+  for(let j = i; j >= 0; j--){
+    if(ITEMS[j].kind === "recording" && ITEMS[j].from) return ITEMS[j].from;
+  }
+  return null;
 }
 
 function loadTrack(i, autoplay){
@@ -517,17 +571,18 @@ function loadTrack(i, autoplay){
   statusEl.textContent = "";
   audio.src = t.src || "";
 
-  if(t.type === "recording"){
+  if(t.kind === "recording"){
     kindEl.textContent = "הקלטה";
     kindEl.className = "label-kind rec";
-    titleEl.textContent = `הקדשה מאת ${t.from}`;
-    subEl.textContent = "";
+    titleEl.textContent = t.from ? `הקדשה מאת ${t.from}` : "הקדמה";
+    subEl.textContent = t.note || "";
     art.innerHTML = ICON_MIC;
   } else {
+    const from = nearestFrom(i);
     kindEl.textContent = "שיר";
     kindEl.className = "label-kind song";
     titleEl.textContent = t.title || "השיר טרם נבחר";
-    subEl.textContent = `מוקדש ע"י ${t.from}`;
+    subEl.textContent = from ? `מוקדש ע"י ${from}` : "";
     art.innerHTML = t.cover ? `<img src="${t.cover}" alt="">` : ICON_NOTE;
   }
 
