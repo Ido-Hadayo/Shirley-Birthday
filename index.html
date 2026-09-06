@@ -66,44 +66,59 @@
     box-shadow:0 24px 48px -20px rgba(0,0,0,0.6);
   }
 
-  /* now playing — עיצוב פשוט בסגנון נגן מוזיקה סטנדרטי */
+  /* now playing — משבצת קטנה + טקסט בצד */
+  .now-playing{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--bg-well);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    margin-bottom:16px;
+  }
   .now-art{
-    width:100%;
-    aspect-ratio:1/1;
-    border-radius:16px;
+    width:56px;
+    height:56px;
+    flex-shrink:0;
+    border-radius:10px;
     background:linear-gradient(160deg,var(--rose),var(--teal));
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
-    margin-bottom:18px;
-    box-shadow:0 16px 32px -18px rgba(42,33,24,0.35);
+    box-shadow:0 8px 16px -8px rgba(42,33,24,0.4);
   }
   .now-art img{ width:100%; height:100%; object-fit:cover; }
-  .now-art svg{ width:64px; height:64px; fill:#fff; opacity:.95; }
+  .now-art svg{ width:24px; height:24px; fill:#fff; opacity:.95; }
+  .now-info{
+    min-width:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
   .now-kind{
-    font-size:0.72rem;
+    font-size:0.68rem;
     letter-spacing:0.08em;
     text-transform:uppercase;
-    text-align:center;
-    margin:0 0 4px;
+    margin:0;
     font-weight:600;
   }
   .now-kind.rec{ color:var(--rose); }
   .now-kind.song{ color:var(--teal); }
   .now-title{
     font-weight:700;
-    font-size:1.2rem;
-    text-align:center;
-    margin:0 0 4px;
+    font-size:1rem;
+    margin:0;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
   }
   .now-sub{
-    font-size:0.88rem;
+    font-size:0.82rem;
     color:var(--ink-muted);
-    text-align:center;
+    margin:0;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -112,7 +127,7 @@
     font-size:0.78rem;
     color:var(--ink-muted);
     text-align:center;
-    margin-top:10px;
+    margin-top:8px;
   }
 
   .counter-row{
@@ -278,12 +293,16 @@
   <h1>יום הולדת שמח, שירלי!</h1>
 
   <div class="deck">
-    <div class="now-art" id="art">
-      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm7 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.07A7 7 0 0 0 19 12z"/></svg>
+    <div class="now-playing">
+      <div class="now-art" id="art">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm7 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.07A7 7 0 0 0 19 12z"/></svg>
+      </div>
+      <div class="now-info">
+        <p class="now-kind" id="kind">הקלטה</p>
+        <p class="now-title" id="title">טוען…</p>
+        <p class="now-sub" id="sub"></p>
+      </div>
     </div>
-    <p class="now-kind" id="kind">הקלטה</p>
-    <p class="now-title" id="title">טוען…</p>
-    <p class="now-sub" id="sub"></p>
     <p class="status-note" id="status"></p>
 
     <div class="counter-row">
