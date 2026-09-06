@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סטטוס המיקסטייפ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#17111f; --card:#241a30; --ink:#f3ead9; --ink-muted:#b1a0bd;
+    --ok:#4fb3ab; --missing:#e2637f; --line:rgba(243,234,217,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:"Rubik","Segoe UI",Arial,sans-serif;
+    min-height:100vh; display:flex; justify-content:center; padding:28px 16px 64px;
+  }
+  .page{ width:100%; max-width:520px; direction:rtl; }
+  h1{ text-align:center; font-size:1.5rem; margin:0 0 4px; }
+  .summary{ text-align:center; color:var(--ink-muted); font-size:.95rem; margin:0 0 24px; }
+  .summary b{ color:var(--ok); }
+  .bar{ height:8px; border-radius:4px; background:var(--line); overflow:hidden; margin:0 0 26px; }
+  .bar-fill{ height:100%; background:var(--ok); }
+  .row{
+    display:flex; align-items:center; gap:10px; padding:10px 4px;
+    border-bottom:1px solid var(--line); font-size:.92rem;
+  }
+  .row:last-child{ border-bottom:none; }
+  .num{ font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--ink-muted); width:22px; flex-shrink:0; }
+  .mark{ width:20px; flex-shrink:0; text-align:center; }
+  .mark.ok{ color:var(--ok); }
+  .mark.missing{ color:var(--missing); }
+  .label{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .label .tag{ color:var(--ink-muted); font-size:.78rem; }
+  .back{ display:block; text-align:center; margin-top:26px; color:var(--ink-muted); font-size:.82rem; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>סטטוס המיקסטייפ</h1>
+  <p class="summary" id="summary"></p>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  <div id="list"></div>
+  <a class="back" href="./index.html">← לאתר עצמו</a>
+</div>
+
+<script>
+const rec = (from, note, file) => ({ kind: "recording", from, note: note || "", file: file || "" });
+const song = (title, file, cover) => ({ kind: "song", title, file: file || "", cover: cover || "" });
+
+const ITEMS_RAW = [
+  rec(null, "פתיחה — חלק 1 (יש גם חלק 2)"),
+  song("Puzzle Pieces — Saint Motel", "puzzle-pieces.mp3"),
+  rec(null, "שורה נפרדת ברשימה של מעיין — אולי כפולה עם הבאה?"),
+  rec("סימונה"),
+  song("Good Morning Baltimore"),
+  rec(null, "הקדמה לפני \"שנקין\"", "rec-intro-sheinkin.m4a"),
+  song("שנקין — מנגו", "sheinkin.mp3"),
+  rec("עמית"),
+  song("מנשה — מתוך \"החבדניקים\"", "menashe.mp3"),
+  rec("מעיין", "", "rec-meayan.m4a"),
+  song("I'll Be There for You — The Rembrandts", "ill-be-there-for-you.mp3"),
+  rec(null, "\"אני: הקלטה מהעבודה, בהיסטוריה\" — של מי זה?", "rec-history-work.m4a"),
+  rec(null, "הקדמה לפני \"מביאים את זה לאללה\""),
+  song("מביאים את זה לאללה — מתוך \"הסוף\"", "mevi-im-et-ze-lealla.mp3"),
+  song("Dog Days Are Over — Florence + the Machine", "dog-days-are-over.mp3"),
+  rec("לי ים", "חלק 1", "rec-liyam-1.m4a"),
+  rec("לי ים", "חלק 2"),
+  song("Don't Stop Me Now — Queen", "dont-stop-me-now.mp3"),
+  rec("דניאל", "", "rec-daniel.m4a"),
+  song("וודו — מרסדס בנד", "vudu.mp3"),
+  song("כל השבוע לך — החלונות הגבוהים", "kol-hashavua-lecha.mp3"),
+  song("לזוז — הדג נחש", "lazuz.mp3"),
+  rec("משה"),
+  song("Defying Gravity — Wicked (2024, Cynthia Erivo)", "defying-gravity.mp3"),
+  rec("גל", "", "rec-gal.m4a"),
+  song("You'll Be Back — Hamilton", "youll-be-back.mp3"),
+  rec("יויו"),
+  song("Liang", "liang.mp3"),
+  rec("אבא של שירלי", "", "rec-shirlys-dad.m4a"),
+  song("Barbie Girl", "barbie-girl.mp3"),
+  rec("עמית", "לקראת טיפת אמת"),
+  song("טיפת אמת", "tipat-emet.mp3"),
+  rec(null, "הקדמה לפני Top of the World"),
+  song("Top of the World — The Carpenters", "top-of-the-world.mp3"),
+  rec("דרור"),
+  song("עבד כי ימלוך", "eved-ki-yimloch.mp3"),
+  rec("תמר"),
+  song("Hopelessly Devoted to You — Olivia Newton-John", "hopelessly-devoted.mp3"),
+  rec("גבי", "", "rec-gabi.m4a"),
+  song("חביב גלבי", "habib-galbi.mp3"),
+  rec("נוי", "", "rec-noy.m4a"),
+  song("False Confidence — Noah Kahan", "false-confidence.mp3"),
+  rec("קרן", "חלק 1"),
+  rec("קרן", "חלק 2", "rec-keren-2.m4a"),
+  song("Isn't She Lovely — Glee", "isnt-she-lovely.mp3"),
+  rec("מוניס"),
+  song("עבריין — ליילי", "avaryan.mp3"),
+  rec(null, "הקדמה לפני Man or a Muppet", "rec-intro-man-or-muppet.m4a"),
+  song("Man or a Muppet — The Muppets (2011)", "man-or-muppet.mp3"),
+  rec("יובל"),
+  song("It Starts With Sorry", "it-starts-with-sorry.mp3"),
+  rec("צור", "חלק 1", "rec-tzur-1.m4a"),
+  rec("צור", "חלק 2", "rec-tzur-2.m4a"),
+  song("Take Me Home, Country Roads — John Denver", "country-roads.mp3"),
+  rec("נעמה"),
+  rec("עמית", "לקראת שיר לנטע", "rec-amit-shir-lenatta.m4a"),
+  song("שיר לנטע", "shir-lenatta.mp3"),
+  rec("סימונה", "ברכה 2, לקראת Forever Young"),
+  song("Forever Young — Alphaville", "forever-young.mp3"),
+  rec("סימונה", "ברכה אחרונה", "rec-simona-last.m4a"),
+  song("In My Life — The Beatles", "in-my-life.mp3"),
+  song("Best Friend"),
+  rec(null, "הקדמה ל-Avenue Q — חלק 1"),
+  rec(null, "הקדמה ל-Avenue Q — חלק 2"),
+  song("What Do You Do with a B.A. in English? — Avenue Q", "ba-in-english.mp3"),
+  rec("עמית", "לקראת איך לאכול אותך"),
+  song("איך לאכול אותך", "eich-leechol-otach.mp3"),
+  rec(null, "הקדמה לפני City of Stars", "rec-intro-city-of-stars.m4a"),
+  rec(null, "ברכת סיום"),
+  song("City of Stars — La La Land", "city-of-stars.mp3"),
+  song("Sunny — Boney M.", "sunny.mp3"),
+];
+
+const listEl = document.getElementById("list");
+const done = ITEMS_RAW.filter(it => it.file).length;
+const total = ITEMS_RAW.length;
+document.getElementById("summary").innerHTML = `<b>${done}</b> מתוך ${total} קבצים יש · חסרים ${total - done}`;
+document.getElementById("barFill").style.width = (done / total * 100).toFixed(0) + "%";
+
+ITEMS_RAW.forEach((it, i) => {
+  const row = document.createElement("div");
+  row.className = "row";
+  const has = !!it.file;
+  const labelText = it.kind === "recording"
+    ? (it.from ? `🎙️ הקדשה מאת ${it.from}` : `🎙️ הקדמה`) + (it.note ? ` <span class="tag">· ${it.note}</span>` : "")
+    : `🎵 ${it.title || "טרם נבחר"}`;
+  row.innerHTML = `
+    <span class="num">${String(i+1).padStart(2,"0")}</span>
+    <span class="mark ${has ? "ok" : "missing"}">${has ? "✓" : "✗"}</span>
+    <span class="label">${labelText}</span>`;
+  listEl.appendChild(row);
+});
+</script>
+</body>
+</html>
